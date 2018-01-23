@@ -53,31 +53,68 @@ const mergeSort = array => {
   return merge(mergeSort(leftArr), mergeSort(rightArr));
 };
 
-// Quick Sort
+// const quickSort = arr => {
+//   let pivot;
+//   let wall = 0;
+//   //for (var j = 0, len = arr.length; j < len; j++) {
+//   pivot = arr[arr.length - 1]; // last
+//   for (var i = wall, len = arr.length - 1; i < len; i++) {
+//     if (arr[i] < pivot) {
+//       [arr[i], arr[wall + 1]] = [arr[wall + 1], arr[i]];
+//       wall++;
+//       console.log("wall: ", wall);
+//       console.log("arr[i]: ", arr[i]);
+//     }
+//   }
+//   //[arr[wall+1],arr[arr.length-1]] = [arr[arr.length-1], arr[wall+1]]
+//   //wall++;
+//   //}
+//
+//   return arr;
+// };
 
-const quickSort = (arr) => {
-  let pivot;
-  let wall = 0;
-  //for (var j = 0, len = arr.length; j < len; j++) {
-    pivot = arr[arr.length-1]; // last 
-    for (var i = wall, len = arr.length-1; i < len; i++) {
-      if (arr[i] < pivot) {
-        [arr[i], arr[wall+1]] = [arr[wall+1], arr[i]];
-        wall++;
-        console.log("wall: ", wall);
-        console.log("arr[i]: ", arr[i]);
+const quickSort = (arr, low = 0, high = arr.length - 1) => {
+  if (high - low <= 0) return;
+  let splitPoint = split(arr, low, high);
+  quickSort(arr, low, splitPoint - 1);
+  quickSort(arr, splitPoint + 1, high);
+  return arr;
+};
+
+const split = (arr, low, high) => {
+  let left = low + 1;
+  let right = high;
+  let pivot = arr[low];
+
+  while (true) {
+    while (left <= right) {
+      if (arr[left] < pivot) {
+        left++;
+      } else {
+        break;
       }
     }
-    //[arr[wall+1],arr[arr.length-1]] = [arr[arr.length-1], arr[wall+1]]
-    //wall++;
-  //}
-  return arr;
-}
+    while (right > left) {
+      if (arr[right] < pivot) {
+        break;
+      } else {
+        right--;
+      }
+    }
+    if (left >= right) break;
+    [arr[left], arr[right]] = [arr[right], arr[left]];
+    left++;
+    right--;
+  }
+  arr[low] = arr[left - 1];
+  arr[left - 1] = pivot;
 
+  return left - 1;
+};
 
 const benchmark = (arr, arrNum, sortNum) => {
-  sortNames = ["Insertion", "Bubble", "Merge"];
-  sortFunctions = [insertionSort, bubbleSort, mergeSort];
+  sortNames = ["Insertion", "Bubble", "Merge", "Quick"];
+  sortFunctions = [insertionSort, bubbleSort, mergeSort, quickSort];
   console.log("=============================================================");
   console.log(
     `===== Average Time to Sort a ${arrNum} Element Array (${sortNum}x) =====`
@@ -89,27 +126,26 @@ const benchmark = (arr, arrNum, sortNum) => {
       sortFunctions[i](arr.slice());
     }
     console.log(
-      `|| ${sortNames[i]} Sort: ${(Date.now() - beforeTime) / 5} milliseconds`
+      `|| * ${sortNames[i]} Sort: ${(Date.now() - beforeTime) /
+        sortNum} milliseconds`
     );
   }
-  console.log("=============================================================");
 };
 
 let arr = [1, 9, 0, 4, 2, 0, 23];
 let longArr = [];
 
-let arrNum = 1000;
+let arrNum = 50000;
 let sortNum = 5;
 for (let i = 0; i < arrNum; i++) {
   longArr.push(Math.floor(Math.random() * 1000));
 }
 
-console.log("arr: ", arr);
+//console.log("arr: ", arr);
 //console.log("insertionSort(arr): ", insertionSort(arr.slice()));
 //console.log("bubbleSort(arr): ", bubbleSort(arr.slice()));
 //console.log("mergeSort(arr): ", mergeSort(arr.slice()));
 
-console.log("quickSort(arr.slice()): ", quickSort(arr.slice()));
+//console.log("quickSort: ", quickSort(arr.slice()));
 
-
-//benchmark(longArr, arrNum, sortNum);
+benchmark(longArr, arrNum, sortNum);
