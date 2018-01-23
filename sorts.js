@@ -53,6 +53,28 @@ const mergeSort = array => {
   return merge(mergeSort(leftArr), mergeSort(rightArr));
 };
 
+// Quick Sort
+
+const quickSort = (arr) => {
+  let pivot;
+  let wall = 0;
+  //for (var j = 0, len = arr.length; j < len; j++) {
+    pivot = arr[arr.length-1]; // last 
+    for (var i = wall, len = arr.length-1; i < len; i++) {
+      if (arr[i] < pivot) {
+        [arr[i], arr[wall+1]] = [arr[wall+1], arr[i]];
+        wall++;
+        console.log("wall: ", wall);
+        console.log("arr[i]: ", arr[i]);
+      }
+    }
+    //[arr[wall+1],arr[arr.length-1]] = [arr[arr.length-1], arr[wall+1]]
+    //wall++;
+  //}
+  return arr;
+}
+
+
 const benchmark = (arr, arrNum, sortNum) => {
   sortNames = ["Insertion", "Bubble", "Merge"];
   sortFunctions = [insertionSort, bubbleSort, mergeSort];
@@ -74,15 +96,20 @@ const benchmark = (arr, arrNum, sortNum) => {
 };
 
 let arr = [1, 9, 0, 4, 2, 0, 23];
+let longArr = [];
 
-let arrNum = 10000;
+let arrNum = 1000;
 let sortNum = 5;
 for (let i = 0; i < arrNum; i++) {
-  arr.push(Math.floor(Math.random() * 1000));
+  longArr.push(Math.floor(Math.random() * 1000));
 }
 
-// console.log("insertionSort(arr): ", insertionSort(arr));
-//console.log("bubbleSort(arr): ", bubbleSort(arr));
-//console.log("mergeSort(arr): ", mergeSort(arr));
+console.log("arr: ", arr);
+//console.log("insertionSort(arr): ", insertionSort(arr.slice()));
+//console.log("bubbleSort(arr): ", bubbleSort(arr.slice()));
+//console.log("mergeSort(arr): ", mergeSort(arr.slice()));
 
-benchmark(arr, arrNum, sortNum);
+console.log("quickSort(arr.slice()): ", quickSort(arr.slice()));
+
+
+//benchmark(longArr, arrNum, sortNum);
